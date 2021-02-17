@@ -19,10 +19,10 @@ name: sentiment-analysis-serving
 org: Iguazio
 platformVersion: 2.10.0
 spec:
-  filename: function.py
+  filename: bert_sentiment_analysis_serving.py
   handler: ''
-  image: ''
-  kind: remote
+  image: 'mlrun/ml-models-gpu'
+  kind: nuclio:serving
   requirements: []
 url: ''
 version: 0.0.1
