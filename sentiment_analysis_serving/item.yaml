@@ -20,9 +20,10 @@ org: Iguazio
 platformVersion: 2.10.0
 spec:
   filename: bert_sentiment_analysis_serving.py
-  handler: ''
+  handler: 'bert_sentiment_analysis_serving:handler'
   image: 'mlrun/ml-models-gpu'
   kind: nuclio:serving
-  requirements: []
+  requirements: 
+  - transformers==3.0.
 url: ''
 version: 0.0.1

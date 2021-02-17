@@ -9,6 +9,7 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
 
 # below is the model architecture, implemented with pytorch whose main component is bert.
 class BertSentimentClassifier(nn.Module):
+    
     def __init__(self, n_classes):
         super(BertSentimentClassifier, self).__init__()
         self.bert = BertModel.from_pretrained(PRETRAINED_MODEL)
@@ -27,6 +28,7 @@ class BertSentimentClassifier(nn.Module):
 
 # The load function essentialy instantiates our custom model with the architecture defined above.
 class SentimentClassifierServing(mlrun.runtimes.MLModelServer):
+    
     def load(self):
         model_file, _ = self.get_model('.pt')
         device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
@@ -34,6 +36,7 @@ class SentimentClassifierServing(mlrun.runtimes.MLModelServer):
         model.load_state_dict(torch.load(model_file, map_location=device))
         model.eval()
         self.model = model
+        
     def predict(self, body):
         try:
             instances = body['instances']
