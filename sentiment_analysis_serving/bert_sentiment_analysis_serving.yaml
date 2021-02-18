@@ -1,7 +1,8 @@
-kind: remote
+kind: serving
 metadata:
   name: sentiment-analysis-serving
-  hash: 81d842def986c72943b8289ea53142cf64111078
+  tag: ''
+  hash: 24bedde35c9652964caf4eb6c1cc891d33f64525
   project: default
   labels:
     author: roye
@@ -15,19 +16,64 @@ spec:
   command: ''
   args: []
   image: mlrun/ml-models-gpu
+  entry_points:
+    forward:
+      name: forward
+      doc: ''
+      parameters:
+      - name: self
+        default: ''
+      - name: input_ids
+        default: ''
+      - name: attention_mask
+        default: ''
+      outputs:
+      - default: ''
+      lineno: 20
+    load:
+      name: load
+      doc: ''
+      parameters:
+      - name: self
+        default: ''
+      outputs:
+      - default: ''
+      lineno: 32
+    predict:
+      name: predict
+      doc: ''
+      parameters:
+      - name: self
+        default: ''
+      - name: body
+        default: ''
+      outputs:
+      - default: ''
+      lineno: 40
+    init_context:
+      name: init_context
+      doc: ''
+      parameters:
+      - name: context
+        default: ''
+      outputs:
+      - default: ''
+      lineno: 50
+    handler:
+      name: handler
+      doc: ''
+      parameters:
+      - name: context
+        default: ''
+      - name: event
+        default: ''
+      outputs:
+      - default: ''
+      lineno: 53
   description: BERT based sentiment classification model
   min_replicas: 1
   max_replicas: 1
-  env:
-  - name: MODEL_CLASS
-    value: SentimentClassifierServing
-  config:
-    spec.triggers.http:
-      kind: http
-      maxWorkers: 8
-      attributes:
-        ingresses: {}
-      annotations: {}
+  env: []
   base_spec:
     apiVersion: nuclio.io/v1
     kind: Function
@@ -44,10 +90,13 @@ spec:
       build:
         commands: []
         noBaseImagesPull: true
-        functionSourceCode: aW1wb3J0IG1scnVuCmltcG9ydCB0b3JjaAppbXBvcnQgdG9yY2gubm4gYXMgbm4KZnJvbSB0cmFuc2Zvcm1lcnMgaW1wb3J0IEJlcnRNb2RlbCwgQmVydFRva2VuaXplcgpmcm9tIGNsb3VkcGlja2xlIGltcG9ydCBkdW1wcwoKUFJFVFJBSU5FRF9NT0RFTCA9ICdiZXJ0LWJhc2UtY2FzZWQnCnRva2VuaXplciA9IEJlcnRUb2tlbml6ZXIuZnJvbV9wcmV0cmFpbmVkKCdiZXJ0LWJhc2UtY2FzZWQnKQoKIyBiZWxvdyBpcyB0aGUgbW9kZWwgYXJjaGl0ZWN0dXJlLCBpbXBsZW1lbnRlZCB3aXRoIHB5dG9yY2ggd2hvc2UgbWFpbiBjb21wb25lbnQgaXMgYmVydC4KY2xhc3MgQmVydFNlbnRpbWVudENsYXNzaWZpZXIobm4uTW9kdWxlKToKICAgIAogICAgZGVmIF9faW5pdF9fKHNlbGYsIG5fY2xhc3Nlcyk6CiAgICAgICAgc3VwZXIoQmVydFNlbnRpbWVudENsYXNzaWZpZXIsIHNlbGYpLl9faW5pdF9fKCkKICAgICAgICBzZWxmLmJlcnQgPSBCZXJ0TW9kZWwuZnJvbV9wcmV0cmFpbmVkKFBSRVRSQUlORURfTU9ERUwpCiAgICAgICAgc2VsZi5kcm9wb3V0ID0gbm4uRHJvcG91dChwPTAuMikKICAgICAgICBzZWxmLm91dF9saW5lYXIgPSBubi5MaW5lYXIoc2VsZi5iZXJ0LmNvbmZpZy5oaWRkZW5fc2l6ZSwgbl9jbGFzc2VzKQogICAgICAgIHNlbGYuc29mdG1heCA9IG5uLlNvZnRtYXgoZGltPTEpCgogICAgZGVmIGZvcndhcmQoc2VsZiwgaW5wdXRfaWRzLCBhdHRlbnRpb25fbWFzayk6CiAgICAgICAgXywgcG9vbGVkX291dCA9IHNlbGYuYmVydCgKICAgICAgICAgICAgaW5wdXRfaWRzPWlucHV0X2lkcywKICAgICAgICAgICAgYXR0ZW50aW9uX21hc2s9YXR0ZW50aW9uX21hc2sKICAgICAgICApCiAgICAgICAgb3V0ID0gc2VsZi5kcm9wb3V0KHBvb2xlZF9vdXQpCiAgICAgICAgb3V0ID0gc2VsZi5vdXRfbGluZWFyKG91dCkKICAgICAgICByZXR1cm4gc2VsZi5zb2Z0bWF4KG91dCkKCiMgVGhlIGxvYWQgZnVuY3Rpb24gZXNzZW50aWFseSBpbnN0YW50aWF0ZXMgb3VyIGN1c3RvbSBtb2RlbCB3aXRoIHRoZSBhcmNoaXRlY3R1cmUgZGVmaW5lZCBhYm92ZS4KY2xhc3MgU2VudGltZW50Q2xhc3NpZmllclNlcnZpbmcobWxydW4ucnVudGltZXMuTUxNb2RlbFNlcnZlcik6CiAgICAKICAgIGRlZiBsb2FkKHNlbGYpOgogICAgICAgIG1vZGVsX2ZpbGUsIF8gPSBzZWxmLmdldF9tb2RlbCgnLnB0JykKICAgICAgICBkZXZpY2UgPSB0b3JjaC5kZXZpY2UoJ2N1ZGE6MCcpIGlmIHRvcmNoLmN1ZGEuaXNfYXZhaWxhYmxlKCkgZWxzZSB0b3JjaC5kZXZpY2UoJ2NwdScpCiAgICAgICAgbW9kZWwgPSBCZXJ0U2VudGltZW50Q2xhc3NpZmllcihuX2NsYXNzZXM9MykKICAgICAgICBtb2RlbC5sb2FkX3N0YXRlX2RpY3QodG9yY2gubG9hZChtb2RlbF9maWxlLCBtYXBfbG9jYXRpb249ZGV2aWNlKSkKICAgICAgICBtb2RlbC5ldmFsKCkKICAgICAgICBzZWxmLm1vZGVsID0gbW9kZWwKICAgICAgICAKICAgIGRlZiBwcmVkaWN0KHNlbGYsIGJvZHkpOgogICAgICAgIHRyeToKICAgICAgICAgICAgaW5zdGFuY2VzID0gYm9keVsnaW5zdGFuY2VzJ10KICAgICAgICAgICAgZW5jID0gdG9rZW5pemVyLmJhdGNoX2VuY29kZV9wbHVzKGluc3RhbmNlcywgcmV0dXJuX3RlbnNvcnM9J3B0JywgcGFkX3RvX21heF9sZW5ndGg9VHJ1ZSkKICAgICAgICAgICAgb3V0cHV0cyA9IHNlbGYubW9kZWwoaW5wdXRfaWRzPWVuY1snaW5wdXRfaWRzJ10sIGF0dGVudGlvbl9tYXNrPWVuY1snYXR0ZW50aW9uX21hc2snXSkKICAgICAgICAgICAgXywgcHJlZHMgPSB0b3JjaC5tYXgob3V0cHV0cywgZGltPTEpCiAgICAgICAgICAgIHJldHVybiBwcmVkcy5jcHUoKS50b2xpc3QoKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgcmFpc2UgRXhjZXB0aW9uKCJGYWlsZWQgdG8gcHJlZGljdCAlcyIgJSBlKQpmcm9tIG1scnVuLnJ1bnRpbWVzIGltcG9ydCBudWNsaW9faW5pdF9ob29rCmRlZiBpbml0X2NvbnRleHQoY29udGV4dCk6CiAgICBudWNsaW9faW5pdF9ob29rKGNvbnRleHQsIGdsb2JhbHMoKSwgJ3NlcnZpbmcnKQoKZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgcmV0dXJuIGNvbnRleHQubWxydW5faGFuZGxlcihjb250ZXh0LCBldmVudCkK
+        functionSourceCode: aW1wb3J0IG1scnVuCmltcG9ydCB0b3JjaAppbXBvcnQgdG9yY2gubm4gYXMgbm4KZnJvbSB0cmFuc2Zvcm1lcnMgaW1wb3J0IEJlcnRNb2RlbCwgQmVydFRva2VuaXplcgpmcm9tIGNsb3VkcGlja2xlIGltcG9ydCBkdW1wcwoKUFJFVFJBSU5FRF9NT0RFTCA9ICdiZXJ0LWJhc2UtY2FzZWQnCnRva2VuaXplciA9IEJlcnRUb2tlbml6ZXIuZnJvbV9wcmV0cmFpbmVkKCdiZXJ0LWJhc2UtY2FzZWQnKQoKIyBiZWxvdyBpcyB0aGUgbW9kZWwgYXJjaGl0ZWN0dXJlLCBpbXBsZW1lbnRlZCB3aXRoIHB5dG9yY2ggd2hvc2UgbWFpbiBjb21wb25lbnQgaXMgYmVydC4KY2xhc3MgQmVydFNlbnRpbWVudENsYXNzaWZpZXIobm4uTW9kdWxlKToKICAgIAogICAgZGVmIF9faW5pdF9fKHNlbGYsIG5fY2xhc3Nlcyk6CiAgICAgICAgc3VwZXIoQmVydFNlbnRpbWVudENsYXNzaWZpZXIsIHNlbGYpLl9faW5pdF9fKCkKICAgICAgICBzZWxmLmJlcnQgPSBCZXJ0TW9kZWwuZnJvbV9wcmV0cmFpbmVkKFBSRVRSQUlORURfTU9ERUwpCiAgICAgICAgc2VsZi5kcm9wb3V0ID0gbm4uRHJvcG91dChwPTAuMikKICAgICAgICBzZWxmLm91dF9saW5lYXIgPSBubi5MaW5lYXIoc2VsZi5iZXJ0LmNvbmZpZy5oaWRkZW5fc2l6ZSwgbl9jbGFzc2VzKQogICAgICAgIHNlbGYuc29mdG1heCA9IG5uLlNvZnRtYXgoZGltPTEpCgogICAgZGVmIGZvcndhcmQoc2VsZiwgaW5wdXRfaWRzLCBhdHRlbnRpb25fbWFzayk6CiAgICAgICAgXywgcG9vbGVkX291dCA9IHNlbGYuYmVydCgKICAgICAgICAgICAgaW5wdXRfaWRzPWlucHV0X2lkcywKICAgICAgICAgICAgYXR0ZW50aW9uX21hc2s9YXR0ZW50aW9uX21hc2sKICAgICAgICApCiAgICAgICAgb3V0ID0gc2VsZi5kcm9wb3V0KHBvb2xlZF9vdXQpCiAgICAgICAgb3V0ID0gc2VsZi5vdXRfbGluZWFyKG91dCkKICAgICAgICByZXR1cm4gc2VsZi5zb2Z0bWF4KG91dCkKCiMgVGhlIGxvYWQgZnVuY3Rpb24gZXNzZW50aWFseSBpbnN0YW50aWF0ZXMgb3VyIGN1c3RvbSBtb2RlbCB3aXRoIHRoZSBhcmNoaXRlY3R1cmUgZGVmaW5lZCBhYm92ZS4KY2xhc3MgU2VudGltZW50Q2xhc3NpZmllclNlcnZpbmcobWxydW4ucnVudGltZXMuTUxNb2RlbFNlcnZlcik6CiAgICAKICAgIGRlZiBsb2FkKHNlbGYpOgogICAgICAgIG1vZGVsX2ZpbGUsIF8gPSBzZWxmLmdldF9tb2RlbCgnLnB0JykKICAgICAgICBkZXZpY2UgPSB0b3JjaC5kZXZpY2UoJ2N1ZGE6MCcpIGlmIHRvcmNoLmN1ZGEuaXNfYXZhaWxhYmxlKCkgZWxzZSB0b3JjaC5kZXZpY2UoJ2NwdScpCiAgICAgICAgbW9kZWwgPSBCZXJ0U2VudGltZW50Q2xhc3NpZmllcihuX2NsYXNzZXM9MykKICAgICAgICBtb2RlbC5sb2FkX3N0YXRlX2RpY3QodG9yY2gubG9hZChtb2RlbF9maWxlLCBtYXBfbG9jYXRpb249ZGV2aWNlKSkKICAgICAgICBtb2RlbC5ldmFsKCkKICAgICAgICBzZWxmLm1vZGVsID0gbW9kZWwKICAgICAgICAKICAgIGRlZiBwcmVkaWN0KHNlbGYsIGJvZHkpOgogICAgICAgIHRyeToKICAgICAgICAgICAgaW5zdGFuY2VzID0gYm9keVsnaW5zdGFuY2VzJ10KICAgICAgICAgICAgZW5jID0gdG9rZW5pemVyLmJhdGNoX2VuY29kZV9wbHVzKGluc3RhbmNlcywgcmV0dXJuX3RlbnNvcnM9J3B0JywgcGFkX3RvX21heF9sZW5ndGg9VHJ1ZSkKICAgICAgICAgICAgb3V0cHV0cyA9IHNlbGYubW9kZWwoaW5wdXRfaWRzPWVuY1snaW5wdXRfaWRzJ10sIGF0dGVudGlvbl9tYXNrPWVuY1snYXR0ZW50aW9uX21hc2snXSkKICAgICAgICAgICAgXywgcHJlZHMgPSB0b3JjaC5tYXgob3V0cHV0cywgZGltPTEpCiAgICAgICAgICAgIHJldHVybiBwcmVkcy5jcHUoKS50b2xpc3QoKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgcmFpc2UgRXhjZXB0aW9uKCJGYWlsZWQgdG8gcHJlZGljdCAlcyIgJSBlKQpmcm9tIG1scnVuLnJ1bnRpbWVzIGltcG9ydCBudWNsaW9faW5pdF9ob29rCmRlZiBpbml0X2NvbnRleHQoY29udGV4dCk6CiAgICBudWNsaW9faW5pdF9ob29rKGNvbnRleHQsIGdsb2JhbHMoKSwgJ3NlcnZpbmdfdjInKQoKZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgcmV0dXJuIGNvbnRleHQubWxydW5faGFuZGxlcihjb250ZXh0LCBldmVudCkK
   source: ''
-  function_kind: serving
-  build:
-    commands: []
+  function_kind: serving_v2
   readiness_timeout: 500
+  default_class: SentimentClassifierServing
+  build:
+    commands:
+    - python -m pip install transformers==3.0.2
+    code_origin: https://github.com/AlonMaor14/functions.git#f08a11fb02d3aa75dd3a3b56b0bfb60be5dd1383:bert_sentiment_analysis_serving.py
 verbose: false

@@ -10,7 +10,6 @@ example: bert_sentiment_analysis_serving.ipynb
 generationDate: '2021-02-13 11:28:47.580822'
 icon: ''
 labels:
-  author: roye
   framework: pytorch
 maintainers: []
 marketplaceType: ''
@@ -20,10 +19,10 @@ org: Iguazio
 platformVersion: 2.10.0
 spec:
   filename: bert_sentiment_analysis_serving.py
-  handler: 'bert_sentiment_analysis_serving:handler'
-  image: 'mlrun/ml-models-gpu'
-  kind: nuclio:serving
+  handler: bert_sentiment_analysis_serving
+  image: mlrun/ml-models-gpu
+  kind: serving
   requirements: 
-  - transformers==3.0.
+  - transformers==3.0.2
 url: ''
 version: 0.0.1
